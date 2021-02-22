@@ -1,0 +1,13 @@
+## Scaleout with MySQL
+
+The purpose of this sample is to demonstrate how Rebus can easily distribute work when using MySQL as the transport layer.
+
+In order to run the sample, you need to have access to a MySQL server, which is assumed to be running locally as the default instance, containing a database called 'rebus' with access to that table with the user 'mysql' and password 'mysql'. A table, 'Messages', will automatically be created in the database.
+
+Naturally, you're free to edit the connection string in both the producer and the consumer.
+
+The sample can be run by starting the producer and any number of consumers. Then you'll see how jobs published by the producer will be distributed to all the consumers.
+
+Unless you change it, each consumer will have one single thread processing messages, but `SetMaxParallelism` is used to enable up to 20 messages to be processes in parallel.
+
+Please note that since the MySQL transport is based on polling the message table, it will back off its polling when no messages are found. Therefore, when sending a small batch of messages when the consumers are idle, some consumers might miss the fact that messages were available, which may seem like the consumers aren't properly competing.
